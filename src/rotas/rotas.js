@@ -39,21 +39,19 @@ rotas.get('/produtos', async (req, res) => {
   return res.status(200).json(produtos)
 })
 
+// Lista produto pelo Id
+rotas.get('/produtos/:id', async (req, res) => {
+  const id = req.params.id
+  const produtoService = new ProdutoService()
+  const produtoId = await produtoService.findByID(id)
+  if(produtoId){
+    return res.status(200).json(produtoId)
+  }
+  return res.status(404).json({ message: "Produto não encontrado" })
+})
+
 // Lista todos as fotos
 rotas.use('/uploads', express.static('uploads'))
-
-
-// Todas as rotas abaixo estão protegidas.
-rotas.use(authMiddleware)
-
-// Cadastrar usuário
-rotas.post("/cadastro", async (req, res) => {
-  const { name, email, password } = req.body;
-  const user = { name, email, password };
-  const userService = new UserService();
-  await userService.create(user);
-  return res.status(201).json(user);
-});
 
 // Listar todos os dados do banco de dados
 rotas.get("/cadastro", async (req, res) => {
@@ -71,6 +69,18 @@ rotas.get("/cadastro/:id", async (req, res) => {
     return res.status(200).json(user);
   }
   return res.status(404).json({ message: "Usuário não encontrado" });
+});
+
+// Todas as rotas abaixo estão protegidas.
+rotas.use(authMiddleware)
+
+// Cadastrar usuário
+rotas.post("/cadastro", async (req, res) => {
+  const { name, email, password } = req.body;
+  const user = { name, email, password };
+  const userService = new UserService();
+  await userService.create(user);
+  return res.status(201).json(user);
 });
 
 // Edita os dados
