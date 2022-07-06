@@ -121,5 +121,17 @@ rotas.post('/produtos', uploadMiddleware.single('image'), async (req, res) => {
   return res.status(200).json(produto)
 })
 
+// Rota de venda
+rotas.post('/produtos/vendas', async (req, res) => {
+  const { produtos } = req.body
+  const produtoService = new ProdutoService()
+
+  for(const produto of produtos){
+    await produtoService.venderProduto(produto)
+  }
+  
+  return res.status(200).json({ message: "Success"})
+})
+
 
 export default rotas;

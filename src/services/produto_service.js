@@ -19,4 +19,14 @@ export default class ProdutoService {
     return await ProdutoModel.findById(ObjectId(id))
   }
 
+  // Diminui o estoque a partir da venda
+  async venderProduto(id) {
+    const produto = await this.findByID(id)
+    if(produto && produto.estoque > 0){
+      produto.estoque = produto.estoque - 1
+      return await ProdutoModel.updateOne({ _id: ObjectId(id)}, produto)
+    }
+    return null
+  }
+
 }
